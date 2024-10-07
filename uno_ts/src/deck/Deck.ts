@@ -64,7 +64,6 @@ export class GameDeck implements GameDeck {
                             cardArray.push(new NumberCard(cardValue, ECardColor.green))
                             cardArray.push(new NumberCard(cardValue, ECardColor.yellow))
                             break
-
                         }
                         case ECardValue.four: {
                             cardArray.push(new NumberCard(cardValue, ECardColor.red))
@@ -72,7 +71,6 @@ export class GameDeck implements GameDeck {
                             cardArray.push(new NumberCard(cardValue, ECardColor.green))
                             cardArray.push(new NumberCard(cardValue, ECardColor.yellow))
                             break
-
                         }
                         case ECardValue.five: {
                             cardArray.push(new NumberCard(cardValue, ECardColor.red))
@@ -80,7 +78,6 @@ export class GameDeck implements GameDeck {
                             cardArray.push(new NumberCard(cardValue, ECardColor.green))
                             cardArray.push(new NumberCard(cardValue, ECardColor.yellow))
                             break
-
                         }
                         case ECardValue.six: {
                             cardArray.push(new NumberCard(cardValue, ECardColor.red))
@@ -88,7 +85,6 @@ export class GameDeck implements GameDeck {
                             cardArray.push(new NumberCard(cardValue, ECardColor.green))
                             cardArray.push(new NumberCard(cardValue, ECardColor.yellow))
                             break
-
                         }
                         case ECardValue.seven: {
                             cardArray.push(new NumberCard(cardValue, ECardColor.red))
@@ -96,7 +92,6 @@ export class GameDeck implements GameDeck {
                             cardArray.push(new NumberCard(cardValue, ECardColor.green))
                             cardArray.push(new NumberCard(cardValue, ECardColor.yellow))
                             break
-
                         }
                         case ECardValue.nine: {
                             cardArray.push(new NumberCard(cardValue, ECardColor.red))
@@ -104,7 +99,6 @@ export class GameDeck implements GameDeck {
                             cardArray.push(new NumberCard(cardValue, ECardColor.green))
                             cardArray.push(new NumberCard(cardValue, ECardColor.yellow))
                             break
-
                         }
                         case ECardValue.zero: {
                             cardArray.push(new NumberCard(cardValue, ECardColor.red))
@@ -112,7 +106,6 @@ export class GameDeck implements GameDeck {
                             cardArray.push(new NumberCard(cardValue, ECardColor.green))
                             cardArray.push(new NumberCard(cardValue, ECardColor.yellow))
                             break
-
                         }
                         case ECardValue.skip: {
                             cardArray.push(new SpecialColorCard(cardValue, ECardColor.red))
@@ -134,7 +127,6 @@ export class GameDeck implements GameDeck {
                             cardArray.push(new SpecialCard(cardValue))
                             cardArray.push(new SpecialCard(cardValue))
                             break
-
                         }
                         case ECardValue.eight: {
                             cardArray.push(new NumberCard(cardValue, ECardColor.red))
@@ -142,7 +134,6 @@ export class GameDeck implements GameDeck {
                             cardArray.push(new NumberCard(cardValue, ECardColor.green))
                             cardArray.push(new NumberCard(cardValue, ECardColor.yellow))
                             break;
-
                         }
                         case ECardValue.reverse: {
                             cardArray.push(new SpecialColorCard(cardValue, ECardColor.red))
@@ -150,7 +141,6 @@ export class GameDeck implements GameDeck {
                             cardArray.push(new SpecialColorCard(cardValue, ECardColor.green))
                             cardArray.push(new SpecialColorCard(cardValue, ECardColor.yellow))
                             break
-
                         }
                         case ECardValue.wildCard: {
                             cardArray.push(new SpecialCard(cardValue))
