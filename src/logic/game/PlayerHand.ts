@@ -4,6 +4,7 @@ export class PlayerHand {
 
     cards: Card[] = [];
     private saidUno: boolean = false;
+    private isBot: boolean = false;
   
     addCards(cards: Card[]): void {
 
@@ -32,6 +33,7 @@ export class PlayerHand {
     }
     
     //Checks if any of the cards in hand is legal and returns true if any is
+    // TODO: Change to return card(s) that are legal
     hasLegalPlay(topCard: Card): boolean {
       return this.cards.some((card) => this.isValidPlay(card, topCard));
     }
