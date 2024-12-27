@@ -1,6 +1,6 @@
+import type { Card, Color, CardType } from "./PlayingCard";
 
-
-class Deck {
+export class Deck {
    
 private drawPile: Card[] = [];
 private discardPile: Card[] = [];

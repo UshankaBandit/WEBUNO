@@ -1,4 +1,6 @@
-class PlayerHand {
+import type { Card } from "./PlayingCard";
+
+export class PlayerHand {
 
     cards: Card[] = [];
     private saidUno: boolean = false;

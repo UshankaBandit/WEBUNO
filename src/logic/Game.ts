@@ -1,3 +1,7 @@
+import {Deck} from './Deck'
+import { PlayerHand } from './PlayerHand';
+import type { Card } from './PlayingCard';
+
 class Game  {
     private deck: Deck;
     private players: PlayerHand[];
