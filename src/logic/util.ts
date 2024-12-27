@@ -19,8 +19,11 @@ export function getCardImgUrl(card: Card) : string {
         case "wild": {
             return uno_cards_url + "wild.jpg"
         }
-        default: {
+        case "wildDrawFour": {
             return uno_cards_url + "wild_draw_4.jpg"
+        }
+        default: {
+            return uno_cards_url + "back.png"
         }
     }
 }
