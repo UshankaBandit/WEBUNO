@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import { Game } from "@/Logik/Game"; // Adjust this path to match your structure
 import type { Card } from "@/Logik/PlayingCard";
 
+
 export const useGameStore = defineStore("game", {
   state: () => ({
     game: null as Game | null, // The main game instance
@@ -13,9 +14,12 @@ export const useGameStore = defineStore("game", {
   }),
   actions: {
     initializeGame(playerName: string, numBots: number) {
-        console.log("Initializing game...");
+       
       this.playerName = playerName;
       this.numBots = numBots;
+
+
+      console.log("Game initialized with playerName:, this.playerName")
 
       // Initialize the game instance
       this.game = new Game(numBots + 1); // +1 for the human player

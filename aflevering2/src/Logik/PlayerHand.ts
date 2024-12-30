@@ -6,7 +6,7 @@ export class PlayerHand {
     cards: Card[] = [];
      saidUno: boolean = false;
      score: number = 0
-isBot: boolean = false;
+public isBot: boolean = false;
   
     addCards(cards: Card[]): void {
 

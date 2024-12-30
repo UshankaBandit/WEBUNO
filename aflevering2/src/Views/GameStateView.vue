@@ -9,9 +9,17 @@
   import GameState from "@/components/GameState.vue";
   
   export default {
+    name: "GameStateView",
     components: {
       GameState,
     },
   };
   </script>
+  
+  <style>
+  .game-state-view {
+    text-align: center;
+    margin-top: 20px;
+  }
+  </style>
   
