@@ -49,18 +49,16 @@ export class Hand {
 
   playCard(card: Card): number {
     let index = 0
+    console.log("hand.ts playCard")
     // Find the index of the card in the player's hand and remove it
     for (let i = 0; i < this.player.cards.length; i++) {
-      if(card.id === this.player.cards[i].id) {
+      if(card === this.player.cards[i]) {
         index = i
       } 
-
-      this.player.cards.splice(index, 1); 
-      this.deck.discard(card); // Add the card to the discard pile
-
     }
         
-      
+    this.player.cards.splice(index, 1); 
+    this.deck.discard(card); // Add the card to the discard pile
     
     return index;
   }

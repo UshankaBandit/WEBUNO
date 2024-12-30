@@ -46,8 +46,10 @@ export class Game {
     const player = this.players[playerIndex];
     const topCard = this.deck.topDiscard();
     const hand = new Hand(player, topCard, this.deck)
-    hand.playCard
+    console.log("game.ts playcard")
+    hand.playCard(card)
   }
+
   playTurn(playerIndex: number, cardIndex: number): void {
     const player = this.players[playerIndex];
     const topCard = this.deck.topDiscard();
@@ -70,6 +72,9 @@ export class Game {
       console.log(`Player ${playerIndex}, it's your turn!`);
       const card = hand.chooseCard(cardIndex, topCard)
       hand.playCard(card)
+
+// turen skal sendes videre
+
     } else {
       console.log(`Player ${playerIndex} has no valid play. Drawing a card.`);
       player.addCards(this.deck.draw(1));

@@ -44,8 +44,9 @@ export const useGameStore = defineStore("game", {
       }
 
       // Ensure the card is valid before playing
-      
+       
         this.game.playcard(this.currentPlayerIndex,card);
+        console.log("gamestore playcard")
 
         // Check if the game has a winner
         if (this.game.isWinnerFound()) {

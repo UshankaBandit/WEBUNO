@@ -19,7 +19,8 @@
       <div
         v-for="(card, index) in playerHand"
         :key="index"
-        class="card">
+        class="card"
+        >
         <img :src="getCardImgUrl(card)" :alt="'Card ' + card.type" />
         <a>{{ index }}</a>
         <!-- Show the Play button only if the card is playable -->
@@ -58,10 +59,11 @@ export default {
     },
   },
   methods: {
-    playCard(card) {
+    playCard(index) {
       if (this.gameStore) {
-        // const cardTemp = this.playerHand[index];
-        this.gameStore.playTurn(card);
+        const handTemp = this.playerHand[index]
+
+        this.gameStore.playTurn(handTemp)
 
         // Check if the played card is a wild card
         // if (card.type === "wild" || card.type === "wildDrawFour") {
