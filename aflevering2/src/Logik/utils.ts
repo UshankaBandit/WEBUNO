@@ -27,3 +27,16 @@ export function getCardImgUrl(card: Card) : string {
         }
     }
 }
+export function isValidPlay(card: Card, topCard: Card): boolean {
+    if (card.type === 'wild' || card.type === 'wildDrawFour'||card.color === topCard.color) {
+      return true;
+    }
+    else if (card.type === "number" && card.value === topCard.value){
+        return true
+    }
+    else if (!card.value && card.type === topCard.type && card.value != 0){
+        return true
+    }
+    
+    else return false
+  }

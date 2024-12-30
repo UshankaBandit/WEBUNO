@@ -18,11 +18,11 @@
     <div class="player-hand">
       <div
         v-for="(card, index) in playerHand"
-        :key="index"
-        class="card"
-      >
+        :key="card.id"
+        class="card">
         <img :src="getCardImgUrl(card)" :alt="'Card ' + card.type" />
-        <button @click="playCard(index)">Play</button>
+        <!-- Show the Play button only if the card is playable -->
+        <button v-if="isValidPlay(card, topCard)" @click="playCard(card)">Play</button>
       </div>
     </div>
 
@@ -31,9 +31,10 @@
 </template>
 
 <script>
-import { useGameStore } from "@/store/gameStore";
-import { useRoute } from "vue-router";
-import { getCardImgUrl } from "@/Logik/utils";
+import { useGameStore } from "@/store/gameStore"
+import { useRoute } from "vue-router"
+import { getCardImgUrl } from "@/Logik/utils"
+import {isValidPlay} from "@/Logik/utils"
 
 export default {
   data() {
@@ -41,6 +42,9 @@ export default {
       gameStore: null,
       playerName: "",
       numBots: 1,
+      showColorPicker: false, // To control the visibility of the color picker
+      wildCard: null, // To store the currently played wild card
+      colors: ["red", "blue", "green", "yellow"], // Available colors
     };
   },
   computed: {
@@ -52,9 +56,16 @@ export default {
     },
   },
   methods: {
-    playCard(index) {
+    playCard(card) {
       if (this.gameStore) {
-        this.gameStore.playTurn(index);
+        //const card = this.playerHand[index];
+        this.gameStore.playTurn(card);
+
+        // Check if the played card is a wild card
+        if (card.type === "wild" || card.type === "wildDrawFour") {
+          this.showColorPicker = true; // Show the color picker
+          this.wildCard = card; // Store the wild card
+        }
       }
     },
     drawCard() {
@@ -73,6 +84,8 @@ export default {
         this.gameStore.initializeGame(this.playerName, this.numBots);
       }
     },
+    getCardImgUrl,
+    isValidPlay,
   },
   mounted() {
     // Initialize the game without triggering gameplay logic prematurely
@@ -83,6 +96,8 @@ export default {
     console.log("Game initialized and ready!");
   },
 };
+
+ 
 </script>
 
 <style>

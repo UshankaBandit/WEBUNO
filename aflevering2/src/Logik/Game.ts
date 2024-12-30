@@ -23,25 +23,32 @@ export class Game {
     for (const player of this.players) {
       player.addCards(this.deck.draw(7));
     }
-
+    console.log("distribute cards")
     // Draw the first card to start the game
     let firstCard = this.deck.draw(1)[0];
-
+    console.log("draw first card")
     // Ensure the first card is not a wild card
-    while (firstCard.type === "wild" || firstCard.type === "wildDrawFour") {
+    
       this.deck.discard(firstCard);
-      firstCard = this.deck.draw(1)[0];
-    }
+      console.log("first card added to discard pile")
 
-    this.deck.discard(firstCard);
 
+    
+      console.log("start loop")
     // Game loop
-    while (!this.winnerFound) {
-      this.playTurn(this.currentPlayerIndex);
-    }
+    
+      //this.playTurn(this.currentPlayerIndex);
+      console.log("loop")
+    
   }
 
-  playTurn(playerIndex: number): void {
+  playcard(playerIndex: number, card: Card){
+    const player = this.players[playerIndex];
+    const topCard = this.deck.topDiscard();
+    const hand = new Hand(player, topCard, this.deck)
+    hand.playCard
+  }
+  playTurn(playerIndex: number, cardIndex: number): void {
     const player = this.players[playerIndex];
     const topCard = this.deck.topDiscard();
     const hand = new Hand(player, topCard, this.deck);
@@ -61,6 +68,8 @@ export class Game {
     // Player's turn
     if (hand.hasLegalPlay(topCard)) {
       console.log(`Player ${playerIndex}, it's your turn!`);
+      const card = hand.chooseCard(cardIndex, topCard)
+      hand.playCard(card)
     } else {
       console.log(`Player ${playerIndex} has no valid play. Drawing a card.`);
       player.addCards(this.deck.draw(1));

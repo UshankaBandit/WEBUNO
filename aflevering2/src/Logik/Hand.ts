@@ -26,11 +26,18 @@ export class Hand {
     return true;
   }
 
-  private isValidPlay(card: Card, topCard: Card): boolean {
-    if (card.type === 'wild' || card.type === 'wildDrawFour') {
+  isValidPlay(card: Card, topCard: Card): boolean {
+    if (card.type === 'wild' || card.type === 'wildDrawFour'||card.color === topCard.color) {
       return true;
     }
-    return card.color === topCard.color || card.type === topCard.type;
+    else if (card.type === "number" && card.value === topCard.value){
+        return true
+    }
+    else if (!card.value && card.type === topCard.type && card.value != 0){
+        return true
+    }
+    
+    else return false
   }
 
   getPlayableCards(topCard: Card): Card[] {
@@ -39,32 +46,36 @@ export class Hand {
   }
 
   playCard(card: Card): number {
+    let index = 0
     // Find the index of the card in the player's hand and remove it
-    const index = this.player.cards.findIndex(
-      (c) =>
-        c.color === card.color &&
-        c.type === card.type &&
-        c.value === card.value
-    );
-
-    if (index >= 0) {
-      this.player.cards.splice(index, 1); // Remove the card from hand
-      this.deck.discard(card); // Add the card to the discard pile
+    for (let i = 0; i < this.player.cards.length; i++) {
+       console.log( "deck kort:" + this.player.cards[i].color)
+       console.log(card)
+    console.log("card color:" + card.color)
+        if(card === this.player.cards[i]){
+            index = i
+        }
+        
     }
+   
+      this.player.cards.splice(index, 1); 
+      this.deck.discard(card); // Add the card to the discard pile
+    
+    
 
     return index;
   }
 
-  chooseCard(index: number, topCard: Card): Card | null {
+  chooseCard(index: number, topCard: Card): Card {
     // Choose a card based on the provided index
     const playableCards = this.getPlayableCards(topCard);
 
-    if (index >= 0 && index < playableCards.length) {
+    
       return playableCards[index];
-    }
+    
 
-    console.error('Invalid card index');
-    return null;
+    
+    
   }
 
   chooseColor(inputColor: string): Color | null {

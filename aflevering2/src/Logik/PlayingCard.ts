@@ -7,5 +7,6 @@ export interface Card {
   color: Color;
   type: CardType;
   value?: number; 
+  id : number;
 }
 
