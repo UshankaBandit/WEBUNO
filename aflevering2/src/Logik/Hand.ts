@@ -36,8 +36,10 @@ export class Hand {
     else if (!card.value && card.type === topCard.type && card.value != 0){
         return true
     }
-    
-    else return false
+    else {
+      console.log("not valid card")
+      return false;
+    } 
   }
 
   getPlayableCards(topCard: Card): Card[] {
@@ -49,20 +51,17 @@ export class Hand {
     let index = 0
     // Find the index of the card in the player's hand and remove it
     for (let i = 0; i < this.player.cards.length; i++) {
-       console.log( "deck kort:" + this.player.cards[i].color)
-       console.log(card)
-    console.log("card color:" + card.color)
-        if(card === this.player.cards[i]){
-            index = i
-        }
-        
-    }
-   
+      if(card.id === this.player.cards[i].id) {
+        index = i
+      } 
+
       this.player.cards.splice(index, 1); 
       this.deck.discard(card); // Add the card to the discard pile
-    
-    
 
+    }
+        
+      
+    
     return index;
   }
 
@@ -72,10 +71,6 @@ export class Hand {
 
     
       return playableCards[index];
-    
-
-    
-    
   }
 
   chooseColor(inputColor: string): Color | null {

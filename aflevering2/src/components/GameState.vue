@@ -11,7 +11,7 @@
   </template>
   
   <script>
-  import { useGameStore } from "@/store/gameStore";
+  import { useGameStore } from "@/Store/GameStore";
   
   export default {
     data() {

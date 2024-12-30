@@ -18,11 +18,13 @@
     <div class="player-hand">
       <div
         v-for="(card, index) in playerHand"
-        :key="card.id"
+        :key="index"
         class="card">
         <img :src="getCardImgUrl(card)" :alt="'Card ' + card.type" />
+        <a>{{ index }}</a>
         <!-- Show the Play button only if the card is playable -->
-        <button v-if="isValidPlay(card, topCard)" @click="playCard(card)">Play</button>
+         <br>
+        <button v-if="isValidPlay(card, topCard)" @click="playCard(index)">Play</button>
       </div>
     </div>
 
@@ -31,7 +33,7 @@
 </template>
 
 <script>
-import { useGameStore } from "@/store/gameStore"
+import { useGameStore } from "@/Store/GameStore"
 import { useRoute } from "vue-router"
 import { getCardImgUrl } from "@/Logik/utils"
 import {isValidPlay} from "@/Logik/utils"
@@ -58,14 +60,14 @@ export default {
   methods: {
     playCard(card) {
       if (this.gameStore) {
-        //const card = this.playerHand[index];
+        // const cardTemp = this.playerHand[index];
         this.gameStore.playTurn(card);
 
         // Check if the played card is a wild card
-        if (card.type === "wild" || card.type === "wildDrawFour") {
-          this.showColorPicker = true; // Show the color picker
-          this.wildCard = card; // Store the wild card
-        }
+        // if (card.type === "wild" || card.type === "wildDrawFour") {
+        //   this.showColorPicker = true; // Show the color picker
+        //   this.wildCard = card; // Store the wild card
+        // }
       }
     },
     drawCard() {
