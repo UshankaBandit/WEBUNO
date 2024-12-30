@@ -81,6 +81,7 @@ class Game {
 
         if(this.checkRoundWinner(player)){
           this.calculateScores(this.currentPlayerIndex)
+          this.checkWinner()
            this.resetForNextRound();
         }
         else this.advanceTurn(this.isReversed)
