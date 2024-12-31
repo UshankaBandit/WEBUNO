@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import { Game } from "@/Logik/Game"; // Adjust this path to match your structure
 import type { Card } from "@/Logik/PlayingCard";
+import type { PlayerHand } from "@/Logik/PlayerHand";
 
 
 export const useGameStore = defineStore("game", {
@@ -34,7 +35,7 @@ export const useGameStore = defineStore("game", {
         throw new Error("Invalid player index");
       }       
         this.game.playcard(this.currentPlayerIndex,card);
-        this.game.advanceTurn
+        
        
 
         //Check if the game has a winner
@@ -82,8 +83,8 @@ export const useGameStore = defineStore("game", {
       return winnerPlayer ? this.playerName : `Bot ${this.currentPlayerIndex}`;
     },
 
-    checkwinner():boolean{
-      return! this.game?.checkWinner()
+    checkWinner(players: PlayerHand[]):boolean{
+      return! this.game?.checkWinner(players)
     }
   },
 

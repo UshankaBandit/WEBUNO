@@ -28,6 +28,7 @@ export function getCardImgUrl(card: Card) : string {
     }
 }
 export function isValidPlay(card: Card, topCard: Card): boolean {
+    try{
     if (card.type === 'wild' || card.type === 'wildDrawFour'||card.color === topCard.color) {
       return true;
     }
@@ -39,4 +40,10 @@ export function isValidPlay(card: Card, topCard: Card): boolean {
     }
     
     else return false
+}
+catch(e)
+{
+    console.log(e)
+    return false;
+}
   }

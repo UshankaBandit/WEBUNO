@@ -24,7 +24,7 @@
     <h2>Your Cards:</h2>
     <div class="player-hand">
       <div
-        v-for="(card, index) in playerHand"
+        v-for="(card, index) in playersHand"
         :key="index"
         class="card"
         >
@@ -32,12 +32,14 @@
         <a>{{ index }}</a>
         <!-- Show the Play button only if the card is playable -->
          <br>
-        <button v-if="isValidPlay(card, topCard)" @click="playCard(index)">Play</button>
+         <button v-if="isValidPlay(card, topCard)" @click="playCard(index)">Play</button>
       </div>
     </div>
 
     <button @click="drawCard">Draw Card</button>
     <button @click = "sayuno">Say Uno</button>
+    <br>
+    <button @click="endGame">end game</button>
   </div>
 </template>
 
@@ -50,7 +52,7 @@ import {isValidPlay} from "@/Logik/utils"
 export default {
   data() {
     return {
-      gameStore: null,
+      gameStore: useGameStore,
       playerName: "",
       numBots: 1,
       showColorPicker: false, // To control the visibility of the color picker
@@ -62,7 +64,7 @@ export default {
     topCard() {
       return this.gameStore?.getTopCard || null;
     },
-    playerHand() {
+    playersHand() {
       return this.gameStore?.getPlayerHand || [];
     },
     botCardCount() {
@@ -72,7 +74,8 @@ export default {
   methods: {
     playCard(index) {
       if (this.gameStore) {
-        const handTemp = this.playerHand[index]
+        const handTemp = this.playersHand[index]
+        
         const colorPicked = ""
         
         if (handTemp.type === "wild" || handTemp.type === "wildDrawFour") {
@@ -80,17 +83,19 @@ export default {
           handTemp.color = color
 
           this.gameStore.playTurn(handTemp)
-          return; 
+          return
         }
-
           this.gameStore.playTurn(handTemp)
         }
 
-        if(gameStore.CheckWinner()){
+        /*if(this.gameStore.checkWinner(this.gameStore.getPlayerHand)){
+          console.log(this.gameStore.getPlayerHand)
           this.$router.push({
         path: "/gameover",
+        query: {
+        },
       });
-        }
+        }*/
       },
     drawCard() {
       if (this.gameStore) {
@@ -111,8 +116,13 @@ export default {
     getCardImgUrl,
     isValidPlay,
     sayuno(){
-      gameStore.saiduno()
-    }
+      this.gameStore.saidUno()
+    },
+    endGame(){
+      this.$router.push({
+        path: "/gameover"
+      });
+    },
   },
   mounted() {
     // Initialize the game without triggering gameplay logic prematurely

@@ -1,6 +1,6 @@
 <template>
     <div class="game-over">
-      <h1>Game Over</h1>
+     
       <h2>Winner: {{ winner }}</h2>
       <ul>
         <li v-for="(score, player) in scores" :key="player">
@@ -21,12 +21,12 @@
       };
     },
     computed: {
-      winner() {
+      /*winner() {
         return this.gameStore.getWinner(); // Compute the winner from the store
       },
       scores() {
         return this.gameStore.scores; // Access scores from the store
-      },
+      },*/
     },
     methods: {
       restartGame() {

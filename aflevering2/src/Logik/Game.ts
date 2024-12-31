@@ -46,9 +46,15 @@ export class Game {
     const topCard = this.deck.topDiscard();
     const hand = new Hand(player, topCard, this.deck)
          
+   
     hand.playCard(card)
-      
-    this.switchTurn(topCard);
+    if(this.isWinnerFound(player)){
+      console.log(this.calculateScores(playerIndex))
+
+    }
+    this.switchTurn(topCard)
+
+    
   }
 
   switchTurn(topCard: Card): void {
@@ -63,13 +69,28 @@ export class Game {
   botPlays(botPlayer: PlayerHand, topCard: Card): void {
     const hand = new Hand(botPlayer, topCard, this.deck)
     try {
-      const cardToPlay  = BotLogic.chooseCardToPlay(botPlayer, topCard, this.deck)
-      hand.playCard(cardToPlay!);
+      if(BotLogic.chooseCardToPlay(botPlayer, topCard, this.deck)=== null){
+        botPlayer.addCards(this.deck.draw(1))
+
+      }
+      else
+      {
+        const cardToPlay  = BotLogic.chooseCardToPlay(botPlayer, topCard, this.deck)
+        if(cardToPlay?.type === "wild" || cardToPlay?.type === "wildDrawFour"){
+          hand.playCard(cardToPlay!);
+          
+          this.deck.topDiscard().color = "red"
+        }
+        else{
+        hand.playCard(cardToPlay!);
+        }
+      
+      }
     } catch (error) {
       botPlayer.addCards(this.deck.draw(1))
 
     }
-    
+  
 
     // Delay for a smoother bot play experience
     this.switchTurn(topCard);
@@ -77,7 +98,7 @@ export class Game {
 
  
 
-  handleCardPlay(card: Card, player: PlayerHand, hand: Hand): void {
+  /*handleCardPlay(card: Card, player: PlayerHand, hand: Hand): void {
     hand.playCard(card);
     this.deck.discard(card);
 
@@ -92,9 +113,9 @@ export class Game {
         this.deck.topDiscard().color = chosenColor;
       }
     }
-
+*/
     // Check for round winner
-    if (player.cards.length === 0) {
+    /*if (player.cards.length === 0) {
       console.log(player.cards.length)
       this.calculateScores(this.currentPlayerIndex);
       this.checkWinner();
@@ -102,7 +123,7 @@ export class Game {
     } else {
       this.advanceTurn();
     }
-  }
+  }*/
 
   /*checkWinner(): boolean {
     for (const [score, player] of this.players.entries()) {
@@ -116,8 +137,10 @@ export class Game {
     return false
   }*/
 
-  checkWinner(): boolean{
-    if(this.players[this.currentPlayerIndex].cards.length < 1){
+  checkWinner(players: PlayerHand[]): boolean{
+    console.log(players[this.currentPlayerIndex])
+    console.log(players[this.currentPlayerIndex].cards.length)
+    if(players[this.currentPlayerIndex].cards.length === 0){
       return true
     }
     else{
