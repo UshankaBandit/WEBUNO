@@ -16,12 +16,13 @@ export class BotLogic {
     const playableCards = player.cards.filter((card) =>
       this.isValidPlay(card, topCard)
     );
-    hand.playCard(playableCards[0])
-
-    if (playableCards.length = 1) {
+    if (playableCards.length = 2) {
       hand.sayUno()
 
     }
+    return(playableCards[0])
+
+    
     
 
     // If no playable cards, return null to signify the bot will draw a card
@@ -44,7 +45,10 @@ export class BotLogic {
     else if (!card.value && card.type === topCard.type && card.value != 0){
         return true
     }
-    else return false
+    else {
+      console.log("not valid card")
+      return false;
+    } 
 
     
   }

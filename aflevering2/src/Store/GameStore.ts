@@ -107,5 +107,15 @@ export const useGameStore = defineStore("game", {
         })) || []
       );
     },
+    getBotCardCount: (state) => {
+      const botCardCount: number[] = [];
+      const players = state.game?.getPlayers();
+      if (!players) return [];
+      for (let i = 1; i < players.length; i++) {
+        let tempCount = players[i].cards.length
+        botCardCount.push(tempCount)
+      }
+      return botCardCount ? botCardCount : [];
+    },
   },
 });

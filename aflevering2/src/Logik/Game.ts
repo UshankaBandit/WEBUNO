@@ -8,7 +8,7 @@ export class Game {
   private deck: Deck;
   private players: PlayerHand[];
   private botPlayers: PlayerHand[];
-  private currentPlayerIndex: number = 0;
+  private currentPlayerIndex: number;
   private targetScore: number = 500;
   private isReversed: boolean = false;
   private winnerFound: boolean = false;
@@ -17,9 +17,10 @@ export class Game {
     this.deck = new Deck();
     this.players = Array.from({ length: numPlayers }, () => new PlayerHand(false));
     this.botPlayers = Array.from({ length: numBots }, () => new PlayerHand(true));
-    this.players = [...this.players, ...this.botPlayers];
+    this.players = [...this.players, ...this.botPlayers]
     console.log(this.players)
-    this.targetScore = targetScore;
+    this.targetScore = targetScore
+    this.currentPlayerIndex = 0
   }
 
   start(): void {
@@ -44,56 +45,37 @@ export class Game {
     let player = this.players[playerIndex];
     const topCard = this.deck.topDiscard();
     const hand = new Hand(player, topCard, this.deck)
-    
-    console.log(player.isBot)
-    if(this.players[playerIndex].isBot){
-      player = this.players[playerIndex]
-      console.log("bot spiller")
-      if(BotLogic.chooseCardToPlay(player,topCard,this.deck)){}
-        else player.addCards(this.deck.draw(1))
-
+         
+    hand.playCard(card)
       
+    this.switchTurn(topCard);
+  }
 
-      return;
-    }
-    else {hand.playCard(card)
-      
+  switchTurn(topCard: Card): void {
+    this.currentPlayerIndex = (this.currentPlayerIndex + 1) % this.players.length;
+
+    const nextPlayer = this.players[this.currentPlayerIndex];
+    if (nextPlayer.isBot) {
+      this.botPlays(nextPlayer, topCard);
     }
   }
 
- /* playTurn(playerIndex: number, cardIndex: number): void {
-    const player = this.players[playerIndex];
-    const topCard = this.deck.topDiscard();
-    const hand = new Hand(player, topCard, this.deck);
-    console.log("is player bot " + player.isBot)
-    if (player.isBot) {
-      const cardToPlay = BotLogic.takeTurn(player, topCard, this.deck);
+  botPlays(botPlayer: PlayerHand, topCard: Card): void {
+    const hand = new Hand(botPlayer, topCard, this.deck)
+    try {
+      const cardToPlay  = BotLogic.chooseCardToPlay(botPlayer, topCard, this.deck)
+      hand.playCard(cardToPlay!);
+    } catch (error) {
+      botPlayer.addCards(this.deck.draw(1))
 
-      if (cardToPlay) {
-        this.handleCardPlay(cardToPlay, player, hand);
-      } else {
-        player.addCards(this.deck.draw(1));
-      }
-
-      return;
     }
+    
 
-    // Player's turn
-    else if (hand.hasLegalPlay(topCard)) {
-      console.log(`Player ${playerIndex}, it's your turn!`);
-      const card = hand.chooseCard(cardIndex, topCard)
-      hand.playCard(card)
+    // Delay for a smoother bot play experience
+    this.switchTurn(topCard);
+  }
 
-// turen skal sendes videre
-
-    } 
-    else {
-      console.log(`Player ${playerIndex} has no valid play. Drawing a card.`);
-      player.addCards(this.deck.draw(1));
-      this.advanceTurn();
-      return;
-    }
-  }*/
+ 
 
   handleCardPlay(card: Card, player: PlayerHand, hand: Hand): void {
     hand.playCard(card);
@@ -116,7 +98,7 @@ export class Game {
       console.log(player.cards.length)
       this.calculateScores(this.currentPlayerIndex);
       this.checkWinner();
-      //this.resetForNextRound();
+      this.resetForNextRound();
     } else {
       this.advanceTurn();
     }

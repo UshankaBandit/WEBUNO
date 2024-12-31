@@ -3,6 +3,13 @@
     <h1>Play Uno</h1>
     <p>Welcome, {{ playerName }}</p>
     <p>Number of Bots: {{ numBots }}</p>
+    <div v-if="botCardCount" class="card">
+      <ul id="ul_top_hypers">
+        <li v-for="i in botCardCount">
+        {{"Bot: "  + i + " Cards left"}}
+        </li>
+      </ul>
+    </div>
 
     <!-- Display the Top Card -->
     <div v-if="topCard" class="card">
@@ -57,6 +64,9 @@ export default {
     },
     playerHand() {
       return this.gameStore?.getPlayerHand || [];
+    },
+    botCardCount() {
+      return this.gameStore?.getBotCardCount || null;
     },
   },
   methods: {
@@ -115,6 +125,13 @@ export default {
 .card {
   text-align: center;
   margin: 10px;
+}
+
+#ul_top_hypers li{
+    display: inline;
+    padding-left: 50px;
+    padding-right: 50px;
+    text-align: center;
 }
 
 .card img {
