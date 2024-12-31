@@ -62,16 +62,19 @@ export default {
     playCard(index) {
       if (this.gameStore) {
         const handTemp = this.playerHand[index]
+        const colorPicked = ""
+        
+        if (handTemp.type === "wild" || handTemp.type === "wildDrawFour") {
+          let color = prompt('Choose color', 'yellow, red, green, blue')
+          handTemp.color = color
 
-        this.gameStore.playTurn(handTemp)
+          this.gameStore.playTurn(handTemp)
+          return; 
+        }
 
-        // Check if the played card is a wild card
-        // if (card.type === "wild" || card.type === "wildDrawFour") {
-        //   this.showColorPicker = true; // Show the color picker
-        //   this.wildCard = card; // Store the wild card
-        // }
-      }
-    },
+          this.gameStore.playTurn(handTemp)
+        }
+      },
     drawCard() {
       if (this.gameStore) {
         this.gameStore.drawCard();

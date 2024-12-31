@@ -47,6 +47,7 @@ export const useGameStore = defineStore("game", {
        
         this.game.playcard(this.currentPlayerIndex,card);
         console.log("gamestore playcard")
+        this.game.advanceTurn()
 
         // Check if the game has a winner
         if (this.game.isWinnerFound()) {
