@@ -8,6 +8,9 @@ export class PlayerHand {
      score: number = 0
 public isBot: boolean = false;
   
+constructor(isbot: boolean){
+  this.isBot = isbot
+}
     addCards(cards: Card[]): void {
 
       //the ...cards unpack the card[] that is given, and pushes it to the playerhands card[]
