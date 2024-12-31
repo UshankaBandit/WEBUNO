@@ -7,18 +7,24 @@ import { BotLogic } from './BotLogic';
 export class Game {
   private deck: Deck;
   private players: PlayerHand[];
+  private botPlayers: PlayerHand[];
   private currentPlayerIndex: number = 0;
   private targetScore: number = 500;
   private isReversed: boolean = false;
   private winnerFound: boolean = false;
 
-  constructor(numPlayers: number, targetScore: number = 500) {
+  constructor(numPlayers: number, numBots: number, targetScore: number = 500) {
     this.deck = new Deck();
-    this.players = Array.from({ length: numPlayers }, () => new PlayerHand());
+    this.players = Array.from({ length: numPlayers }, () => new PlayerHand(false));
+    this.botPlayers = Array.from({ length: numBots }, () => new PlayerHand(true));
+    this.players = [...this.players, ...this.botPlayers];
+    console.log(this.players)
     this.targetScore = targetScore;
   }
 
   start(): void {
+
+
     // Distribute 7 cards to each player
     for (const player of this.players) {
       player.addCards(this.deck.draw(7));

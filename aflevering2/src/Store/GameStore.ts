@@ -23,7 +23,7 @@ export const useGameStore = defineStore("game", {
       console.log("Game initialized with playerName:" + this.playerName)
 
       // Initialize the game instance
-      this.game = new Game(numBots + 1); // +1 for the human player
+      this.game = new Game(1, numBots); // +1 for the human player
       console.log(1)
       this.game.start();
       console.log(2)
