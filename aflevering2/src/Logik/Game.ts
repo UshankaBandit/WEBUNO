@@ -29,38 +29,43 @@ export class Game {
     for (const player of this.players) {
       player.addCards(this.deck.draw(7));
     }
-    console.log("distribute cards")
-    // Draw the first card to start the game
+    
     let firstCard = this.deck.draw(1)[0];
-    console.log("draw first card")
-    // Ensure the first card is not a wild card
-    
+
       this.deck.discard(firstCard);
-      console.log("first card added to discard pile")
 
-
-    
-      console.log("start loop")
-    // Game loop
-    
-      //this.playTurn(this.currentPlayerIndex);
-      console.log("loop")
-    
+      if(firstCard.type === "wild" || firstCard.type === "wildDrawFour"){
+        firstCard = this.deck.draw(1)[0]
+        this.deck.discard(firstCard)
+      }
   }
 
   playcard(playerIndex: number, card: Card){
-    const player = this.players[playerIndex];
+    let player = this.players[playerIndex];
     const topCard = this.deck.topDiscard();
     const hand = new Hand(player, topCard, this.deck)
-    console.log("game.ts playcard")
-    hand.playCard(card)
+    
+    console.log(player.isBot)
+    if(this.players[playerIndex].isBot){
+      player = this.players[playerIndex]
+      console.log("bot spiller")
+      if(BotLogic.chooseCardToPlay(player,topCard,this.deck)){}
+        else player.addCards(this.deck.draw(1))
+
+      
+
+      return;
+    }
+    else {hand.playCard(card)
+      
+    }
   }
 
-  playTurn(playerIndex: number, cardIndex: number): void {
+ /* playTurn(playerIndex: number, cardIndex: number): void {
     const player = this.players[playerIndex];
     const topCard = this.deck.topDiscard();
     const hand = new Hand(player, topCard, this.deck);
-
+    console.log("is player bot " + player.isBot)
     if (player.isBot) {
       const cardToPlay = BotLogic.takeTurn(player, topCard, this.deck);
 
@@ -74,20 +79,21 @@ export class Game {
     }
 
     // Player's turn
-    if (hand.hasLegalPlay(topCard)) {
+    else if (hand.hasLegalPlay(topCard)) {
       console.log(`Player ${playerIndex}, it's your turn!`);
       const card = hand.chooseCard(cardIndex, topCard)
       hand.playCard(card)
 
 // turen skal sendes videre
 
-    } else {
+    } 
+    else {
       console.log(`Player ${playerIndex} has no valid play. Drawing a card.`);
       player.addCards(this.deck.draw(1));
       this.advanceTurn();
       return;
     }
-  }
+  }*/
 
   handleCardPlay(card: Card, player: PlayerHand, hand: Hand): void {
     hand.playCard(card);
@@ -107,9 +113,10 @@ export class Game {
 
     // Check for round winner
     if (player.cards.length === 0) {
+      console.log(player.cards.length)
       this.calculateScores(this.currentPlayerIndex);
       this.checkWinner();
-      this.resetForNextRound();
+      //this.resetForNextRound();
     } else {
       this.advanceTurn();
     }
@@ -173,13 +180,13 @@ export class Game {
 
   advanceTurn(): void {
     if (this.isReversed) {
-      this.currentPlayerIndex =
-        (this.currentPlayerIndex - 1 + this.players.length) % this.players.length;
+      this.currentPlayerIndex = (this.currentPlayerIndex - 1 + this.players.length) % this.players.length;
     } else {
       this.currentPlayerIndex =
         (this.currentPlayerIndex + 1) % this.players.length;
     }
   }
+
 
   getCurrentPlayerIndex(): number {
     return this.currentPlayerIndex;
@@ -193,11 +200,19 @@ export class Game {
     return this.deck;
   }
 
-  isWinnerFound(): boolean {
-    return this.winnerFound;
+  isWinnerFound(player: PlayerHand): boolean {
+    if(player.cards.length === 0)
+    {
+      return true
+    }
+    else return false
   }
 
   getTargetScore(): number {
     return this.targetScore;
+  }
+
+  sayUno(){
+    this.players[this.currentPlayerIndex].saidUno = true
   }
 }

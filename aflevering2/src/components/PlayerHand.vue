@@ -30,6 +30,7 @@
     </div>
 
     <button @click="drawCard">Draw Card</button>
+    <button @click = "sayuno">Say Uno</button>
   </div>
 </template>
 
@@ -93,6 +94,9 @@ export default {
     },
     getCardImgUrl,
     isValidPlay,
+    sayuno(){
+      gameStore.saiduno()
+    }
   },
   mounted() {
     // Initialize the game without triggering gameplay logic prematurely

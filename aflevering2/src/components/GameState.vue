@@ -8,6 +8,7 @@
       </ul>
       <button @click="nextHand">Start Next Hand</button>
     </div>
+    
   </template>
   
   <script>

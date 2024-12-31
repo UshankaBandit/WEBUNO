@@ -1,24 +1,28 @@
 import type { Card } from "@/Logik/PlayingCard";
 import { Deck } from "@/Logik/Deck";
 import { PlayerHand } from "@/Logik/PlayerHand";
+import { Hand } from "./Hand";
 
 export class BotLogic {
   /**
    * Makes a decision for the bot to play a card.
-   * @param hand The bot's hand of cards.
+   * @param player The bot's hand of cards.
    * @param topCard The current top card on the discard pile.
    * @returns The card the bot chooses to play, or null if it draws a card.
    */
-  static chooseCardToPlay(hand: PlayerHand, topCard: Card): Card | null {
+  static chooseCardToPlay(player: PlayerHand, topCard: Card, deck: Deck): Card | null {
     // Filter valid cards based on Uno rules
-    const playableCards = hand.cards.filter((card) =>
+    const hand = new Hand(player,topCard,deck)
+    const playableCards = player.cards.filter((card) =>
       this.isValidPlay(card, topCard)
     );
+    hand.playCard(playableCards[0])
 
-    if (playableCards.length > 0) {
-      // Pick the first playable card (or implement a smarter strategy)
-      return playableCards[0];
+    if (playableCards.length = 1) {
+      hand.sayUno()
+
     }
+    
 
     // If no playable cards, return null to signify the bot will draw a card
     return null;
@@ -31,15 +35,18 @@ export class BotLogic {
    * @returns True if the card can be played, false otherwise.
    */
   static isValidPlay(card: Card, topCard: Card): boolean {
-    if (card.type === "wild" || card.type === "wildDrawFour") {
-      return true; // Wild cards are always valid
+    if (card.type === 'wild' || card.type === 'wildDrawFour'||card.color === topCard.color) {
+      return true;
     }
+    else if (card.type === "number" && card.value === topCard.value){
+        return true
+    }
+    else if (!card.value && card.type === topCard.type && card.value != 0){
+        return true
+    }
+    else return false
 
-    return (
-      card.color === topCard.color || // Match color
-      card.type === topCard.type || // Match type
-      (card.type === "number" && card.value === topCard.value) // Match number
-    );
+    
   }
 
   /**
@@ -67,7 +74,7 @@ export class BotLogic {
    * @param deck The deck from which to draw cards.
    * @returns The card the bot plays, or null if it draws a card.
    */
-  static takeTurn(bot: PlayerHand, topCard: Card, deck: Deck): Card | null {
+  /*static takeTurn(bot: PlayerHand, topCard: Card, deck: Deck): Card | null {
     // Decide which card to play
     const cardToPlay = this.chooseCardToPlay(bot, topCard);
 
@@ -81,5 +88,5 @@ export class BotLogic {
       bot.addCards(drawnCards);
       return null;
     }
-  }
+  }*/
 }

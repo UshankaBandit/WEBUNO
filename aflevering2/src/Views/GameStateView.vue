@@ -12,6 +12,7 @@
     name: "GameStateView",
     components: {
       GameState,
+
     },
   };
   </script>

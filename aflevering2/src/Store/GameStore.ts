@@ -14,22 +14,13 @@ export const useGameStore = defineStore("game", {
   }),
   actions: {
     initializeGame(playerName: string, numBots: number) {
-       console.log(playerName + "init")
+
       this.playerName = playerName;
       this.numBots = numBots;
-
-      console.log(numBots + "init")
-
-      console.log("Game initialized with playerName:" + this.playerName)
-
-      // Initialize the game instance
-      this.game = new Game(1, numBots); // +1 for the human player
-      console.log(1)
+    
+      this.game = new Game(1, numBots); 
       this.game.start();
-      console.log(2)
-
-      console.log(this.game.getPlayers)
-      // Set the current player index
+      
       this.currentPlayerIndex = this.game.getCurrentPlayerIndex();
     },
 
@@ -41,19 +32,20 @@ export const useGameStore = defineStore("game", {
 
       if (!currentPlayer) {
         throw new Error("Invalid player index");
-      }
-
-      // Ensure the card is valid before playing
-       
+      }       
         this.game.playcard(this.currentPlayerIndex,card);
-        console.log("gamestore playcard")
-        this.game.advanceTurn()
+        this.game.advanceTurn
+       
 
-        // Check if the game has a winner
-        if (this.game.isWinnerFound()) {
+        //Check if the game has a winner
+        if (this.game.isWinnerFound(currentPlayer)) {
           this.gameOver = true;
           this.winner = this.getWinnerName();
         }
+      
+    },
+    saidUno(){
+      this.game?.sayUno()
       
     },
 
