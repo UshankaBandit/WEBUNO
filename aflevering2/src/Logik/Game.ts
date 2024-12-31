@@ -104,13 +104,24 @@ export class Game {
     }
   }
 
-  checkWinner(): void {
-    for (const [index, player] of this.players.entries()) {
+  /*checkWinner(): boolean {
+    for (const [score, player] of this.players.entries()) {
       if (player.score >= this.targetScore) {
         this.winnerFound = true;
-        console.log(`Winner is Player ${index}!`);
-        break;
+        prompt("WINNER WINNER CHICKEN DINNER: " + player + " with the score of: " + player.score);
+        return true   
       }
+      return false
+    }
+    return false
+  }*/
+
+  checkWinner(): boolean{
+    if(this.players[this.currentPlayerIndex].cards.length < 1){
+      return true
+    }
+    else{
+      return false
     }
   }
 

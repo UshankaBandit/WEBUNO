@@ -85,6 +85,12 @@ export default {
 
           this.gameStore.playTurn(handTemp)
         }
+
+        if(gameStore.CheckWinner()){
+          this.$router.push({
+        path: "/gameover",
+      });
+        }
       },
     drawCard() {
       if (this.gameStore) {

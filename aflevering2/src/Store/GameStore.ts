@@ -81,7 +81,13 @@ export const useGameStore = defineStore("game", {
 
       return winnerPlayer ? this.playerName : `Bot ${this.currentPlayerIndex}`;
     },
+
+    checkwinner():boolean{
+      return! this.game?.checkWinner()
+    }
   },
+
+  
   getters: {
     getTopCard: (state) => {
         console.log(state)
