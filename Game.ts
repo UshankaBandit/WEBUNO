@@ -1,155 +1,128 @@
-import { Deck } from './Deck'
+import { Deck } from './Deck';
 import { PlayerHand } from './PlayerHand';
 import type { Card } from './PlayingCard';
-import {Hand} from './Hand'
+import { Hand } from './Hand';
+import { BotLogic } from './BotLogic';
 
-class Game {
+export class Game {
   private deck: Deck;
   private players: PlayerHand[];
-  private currentPlayerIndex: number = 0;
+  private botPlayers: PlayerHand[];
+  private currentPlayerIndex: number;
   private targetScore: number = 500;
   private isReversed: boolean = false;
-  private winnerfound: boolean = false;
-  private hand: Hand
+  private winnerFound: boolean = false;
 
-  constructor(numPlayers: number, targetScore: number = 500) {
+  constructor(numPlayers: number, numBots: number, targetScore: number = 500) {
     this.deck = new Deck();
-    this.players = Array.from({ length: numPlayers }, () => new PlayerHand());
-    this.targetScore = targetScore;
+    this.players = Array.from({ length: numPlayers }, () => new PlayerHand(false));
+    this.botPlayers = Array.from({ length: numBots }, () => new PlayerHand(true));
+    this.players = [...this.players, ...this.botPlayers]
+    console.log(this.players)
+    this.targetScore = targetScore
+    this.currentPlayerIndex = 0
   }
 
   start(): void {
- 
-    //7 start kort til hver spiller
+
+
+
     for (const player of this.players) {
       player.addCards(this.deck.draw(7));
     }
+    
+    let firstCard = this.deck.draw(1)[0];
 
-    //topcard of deck gets put in discardpile
-    const firstCard = this.deck.draw(1)[0];
-
-    //sikre at første kort ikke er et wild
-    if (firstCard.type === "wild" || firstCard.type === "wildDrawFour") {
       this.deck.discard(firstCard);
-      this.start(); // restart
-    } else {
-      this.deck.discard(firstCard);
-    }
 
-    while (this.winnerfound === false) {
-        this.playTurn(this.currentPlayerIndex)
-    }
-
+      if(firstCard.type === "wild" || firstCard.type === "wildDrawFour"){
+        firstCard = this.deck.draw(1)[0]
+        this.deck.discard(firstCard)
+      }
   }
 
-
-
-  playTurn(playerIndex: number): void {
-    
-    
-    const player = this.players[playerIndex]
-    
-    const topCard = this.deck.topDiscard()
-
-    this.hand = new Hand(player, topCard, this.deck)
+  playcard(playerIndex: number, card: Card){
+    let player = this.players[playerIndex];
+    const topCard = this.deck.topDiscard();
+    const hand = new Hand(player, topCard, this.deck)
+         
    
-    if(this.checkSpecialTopcard(topCard, playerIndex))
-    {
-      if(!this.hand.hasLegalPlay(topCard)){
-        player.addCards(this.deck.draw(1))
-      }
-      else{
-        const chosencard = this.hand.chooseCardToPlay(topCard)
+    hand.playCard(card)
+    if(this.isWinnerFound(player)){
+      console.log(this.calculateScores(playerIndex))
 
-        if (chosencard.type === "reverse"){
-          if(this.isReversed){
-          this.isReversed = false
-          }
-          else{
-            this.isReversed = true
-          }
-        }
-        
-        const indexOfCard = this.hand.playCard(chosencard)
-
-        this.deck.discard(player.cards[indexOfCard])
-        player.removeCard(indexOfCard)
-
-        if (chosencard.type === "wild" || chosencard.type === "wildDrawFour"){
-          topCard.color = this.hand.chooseColor()
-        }
-
-        if(this.checkRoundWinner(player)){
-          this.calculateScores(this.currentPlayerIndex)
-          this.checkWinner()
-           this.resetForNextRound();
-        }
-        else this.advanceTurn(this.isReversed)
-      }
     }
-  }
+    this.switchTurn(topCard)
 
-
-
-checkRoundWinner(player: PlayerHand): boolean{
-  if (player.cards.length = 0)
-  {
-    return true
     
   }
-  else return false
 
-}
+  switchTurn(topCard: Card): void {
+    this.currentPlayerIndex = (this.currentPlayerIndex + 1) % this.players.length;
 
-  checkSpecialTopcard(topCard: Card, playerindex: number): boolean{
-    const player = this.players[playerindex];
-    if(topCard.type === "drawTwo"){
-        const draw = this.deck.draw(2)[0]
-        player.addCards([draw])
-        
-        return false
+    const nextPlayer = this.players[this.currentPlayerIndex];
+    if (nextPlayer.isBot) {
+      this.botPlays(nextPlayer, topCard);
     }
+  }
 
-    else if(topCard.type === "wildDrawFour"){
-        const draw = this.deck.draw(4)[0];
-        player.addCards([draw])
-        
-        return false
+  botPlays(botPlayer: PlayerHand, topCard: Card): void {
+    const hand = new Hand(botPlayer, topCard, this.deck)
+    try {
+      if(BotLogic.chooseCardToPlay(botPlayer, topCard, this.deck)=== null){
+        botPlayer.addCards(this.deck.draw(1))
+
+      }
+      else
+      {
+        const cardToPlay  = BotLogic.chooseCardToPlay(botPlayer, topCard, this.deck)
+        if(cardToPlay?.type === "wild" || cardToPlay?.type === "wildDrawFour"){
+          hand.playCard(cardToPlay!);
+          
+          this.deck.topDiscard().color = "red"
+        }
+        else{
+        hand.playCard(cardToPlay!);
+        }
+      
+      }
+    } catch (error) {
+      botPlayer.addCards(this.deck.draw(1))
+
     }
+  
 
-    else if (topCard.type === "skip"){
-        
-        return false
+    this.switchTurn(topCard);
+  }
+
+ 
+
+  checkWinner(players: PlayerHand[]): boolean{
+    console.log(players[this.currentPlayerIndex])
+    console.log(players[this.currentPlayerIndex].cards.length)
+    if(players[this.currentPlayerIndex].cards.length === 0){
+      return true
     }
-
     else{
-        return true
+      return false
     }
-
   }
 
-  //retunere null hvis der ikke er en vinder
-  checkWinner(): void {
-   for (let i = 0; i < this.players.length; i++) {
-        if(this.players[i].score >= this.targetScore)
-        this.winnerfound = true;   
-    console.log("winner is: " + this.players[i])
-   
-   }
-  }
-
-  private calculateScores(winningPlayerIndex: number): void {
-    const score = this.players.reduce((acc, player, index) => { //looper igennem alle spillerne
-      if (index !== winningPlayerIndex) { //hvis spilleren ikke er vinderen
-        return acc + player.cards.reduce((sum, card) => sum + this.getCardPoints(card), 0); //lopper igennem alle kortene og sum værdi
+  calculateScores(winningPlayerIndex: number): void {
+    const score = this.players.reduce((acc, player, index) => {
+      if (index !== winningPlayerIndex) {
+        return (
+          acc +
+          player.cards.reduce((sum, card) => sum + this.getCardPoints(card), 0)
+        );
       }
-      return acc; //acc = accumilated scorer
+      return acc;
     }, 0);
-    this.players[winningPlayerIndex].score += score
-    
+
+    this.players[winningPlayerIndex].score += score;
   }
 
-  private getCardPoints(card: Card): number {
+  getCardPoints(card: Card): number {
     switch (card.type) {
       case "number":
         return card.value ?? 0;
@@ -165,36 +138,57 @@ checkRoundWinner(player: PlayerHand): boolean{
     }
   }
 
-  private resetForNextRound(): void {
+  resetForNextRound(): void {
     this.deck = new Deck();
-    this.players.forEach((player) => player.addCards(this.deck.draw(7)));
-    const firstCard = this.deck.draw(1)[0];
+    for (const player of this.players) {
+      player.addCards(this.deck.draw(7));
+    }
+
+    let firstCard = this.deck.draw(1)[0];
+    while (firstCard.type === "wild" || firstCard.type === "wildDrawFour") {
+      this.deck.discard(firstCard);
+      firstCard = this.deck.draw(1)[0];
+    }
+
     this.deck.discard(firstCard);
     this.currentPlayerIndex = 0;
   }
 
-  private advanceTurn(isReversed: boolean): void {
-    if(isReversed){
-        this.currentPlayerIndex = (this.currentPlayerIndex - 1) % this.players.length;
+  advanceTurn(): void {
+    if (this.isReversed) {
+      this.currentPlayerIndex = (this.currentPlayerIndex - 1 + this.players.length) % this.players.length;
+    } else {
+      this.currentPlayerIndex =
+        (this.currentPlayerIndex + 1) % this.players.length;
     }
-
-    else{
-        this.currentPlayerIndex = (this.currentPlayerIndex + 1) % this.players.length;
-    }
-    
   }
 
-  private penalizeUno(player: PlayerHand): boolean{
-        
-    if(player.cards.length === 1 && player.saidUno === false)
-        {
-        player.addCards(this.deck.draw(1))
-   
-        return true
-    }
-    else{
-        return false
-    }
-}
 
+  getCurrentPlayerIndex(): number {
+    return this.currentPlayerIndex;
+  }
+
+  getPlayers(): PlayerHand[] {
+    return this.players;
+  }
+
+  getDeck(): Deck {
+    return this.deck;
+  }
+
+  isWinnerFound(player: PlayerHand): boolean {
+    if(player.cards.length === 0)
+    {
+      return true
+    }
+    else return false
+  }
+
+  getTargetScore(): number {
+    return this.targetScore;
+  }
+
+  sayUno(){
+    this.players[this.currentPlayerIndex].saidUno = true
+  }
 }

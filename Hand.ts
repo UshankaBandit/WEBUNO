@@ -1,118 +1,84 @@
-import { Deck } from './Deck'
+import { Deck } from './Deck';
 import { PlayerHand } from './PlayerHand';
 import type { Card, Color } from './PlayingCard';
 
-export class Hand{
+export class Hand {
+  deck: Deck;
+  player: PlayerHand;
+  topCard: Card;
 
-deck: Deck
-player: PlayerHand
-topCard: Card
+  constructor(currentPlayer: PlayerHand, topCard: Card, deck: Deck) {
+    this.player = currentPlayer;
+    this.topCard = topCard;
+    this.deck = deck;
+  }
 
- 
-constructor(currentPlayer: PlayerHand, topCard: Card, deck: Deck ){
-    this.player = currentPlayer
-    this.topCard = topCard
-    this.deck = deck
-}
+  hasLegalPlay(topCard: Card): boolean {
+   
+    return this.player.cards.some((card) => this.isValidPlay(card, topCard));
+  }
 
-    
-    
-    hasLegalPlay(topCard: Card): boolean {
+  sayUno(): boolean {
+    return true;
+  }
 
-        //går igennem all kort, og tjekker om bare et er godt nok
-      return this.player.cards.some((card) => this.isValidPlay(card, topCard))
+  callUnoOnPlayer(): boolean {
+    return true;
+  }
+
+  isValidPlay(card: Card, topCard: Card): boolean {
+    if (card.type === 'wild' || card.type === 'wildDrawFour'||card.color === topCard.color) {
+      return true;
     }
-  
-    sayUno(): boolean{
+    else if (card.type === "number" && card.value === topCard.value){
         return true
     }
-
-    callUnoOnPlayer(): boolean{
-        return true;
+    else if (!card.value && card.type === topCard.type && card.value != 0){
+        return true
     }
-  
-    private isValidPlay(card: Card, topCard: Card): boolean {
-     
-        if(card.type === "wild" || card.type === "wildDrawFour")
-        {
-            return true;
-        }
-      return (
-        card.color === topCard.color ||
-        card.type === topCard.type
-      )
+    else {
+      console.log("not valid card")
+      return false;
+    } 
+  }
+
+  getPlayableCards(topCard: Card): Card[] {
+   
+    return this.player.cards.filter((card) => this.isValidPlay(card, topCard));
+  }
+
+  playCard(card: Card): number {
+    let index = 0
+    console.log("hand.ts playCard")
+   
+    for (let i = 0; i < this.player.cards.length; i++) {
+      if(card === this.player.cards[i]) {
+        index = i
+      } 
     }
-  
-
-    chooseCardToPlay(topCard: Card): Card {
-        // Filtrer mulige kort
-        const playableCards = this.player.cards.filter((card) =>
-            this.isValidPlay(card, topCard)
-        );
-
-        // List alle mulige kort
-        console.log("Your playable cards:");
-        playableCards.forEach((card, index) => {
-        console.log(`${index}: ${card.color} ${card.type} ${card.value ?? ""}`);
-        });
-
         
-        
-        const chosenIndex = this.promptForCard(playableCards.length);
+    this.player.cards.splice(index, 1); 
+    this.deck.discard(card); 
+    
+    return index;
+  }
 
-        return playableCards[chosenIndex];
-    }
+  chooseCard(index: number, topCard: Card): Card {
 
-    // prompt for at vælge kort
-    private promptForCard(maxIndex: number): number {
-        let chosenIndex: number;
-        do {
-            const input = prompt(`Choose a card index (0 to ${maxIndex - 1}):`);
-            chosenIndex = parseInt(input ?? "", 10);
-        } while (isNaN(chosenIndex) || chosenIndex < 0 || chosenIndex >= maxIndex);
-        return chosenIndex;
-    }
-
-    playCard(card: Card): number {
-        //finder index a kortet ved at sammenligne med hånden
-        const index = this.player.cards.findIndex(
-          (c) => c.color === card.color && c.type === card.type && c.value === card.value
-        );    
-          return index
-          
-    }
+    const playableCards = this.getPlayableCards(topCard);
 
     
+      return playableCards[index];
+  }
 
-    chooseColor(): Color {
-        // Prompts the player to choose a color
-        let chosenColor: Color | undefined; // Allow undefined initially
-
-        do {
-            const input = prompt(`Choose a card color (red, blue, green, yellow):`)?.toLowerCase(); // Convert input to lowercase
-            if (input === "red" || input === "blue" || input === "green" || input === "yellow") {
-                chosenColor = input as Color; // Assert input is of type Color
-            } else {
-                alert("Invalid color. Please choose a valid color.");
-            }
-        } while (!chosenColor);
-
-        return chosenColor;
-    }
+  chooseColor(inputColor: string): Color | null {
     
+    const color = inputColor.toLowerCase();
+    if (['red', 'blue', 'green', 'yellow'].includes(color)) {
+      return color as Color;
+    }
 
+    console.error('Invalid color');
+    return null;
+  }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
